@@ -17,10 +17,10 @@ int main(void)
     double in[] = {11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34}; 
     
     for(int i = 0; i < n; i++){
-	for(int j = 0; j < m; j++){
-	    printf("%8.3f ", in[i*m + j]);
-	}
-	putchar('\n');
+        for(int j = 0; j < m; j++){
+            printf("%8.3f ", in[i*m + j]);
+	   }
+	   putchar('\n');
     }
     printf("\n\n");
     
@@ -32,20 +32,20 @@ int main(void)
     double norm1 = 4 * sqrt(m/2.0) * sqrt(n/2.0);
     double norm2 = sqrt(2);
     for(int i = 0; i < n; i++){
-	for(int j = 0; j < m; j++){
-	    out[i*m + j] = out[i*m + j] / norm1;
-	    if(i == 0 || j == 0)
-		out[i*m + j] = out[i*m + j] / norm2;
-	}
+        for(int j = 0; j < m; j++){
+            out[i*m + j] = out[i*m + j] / norm1;
+            if(i == 0 || j == 0)
+                out[i*m + j] = out[i*m + j] / norm2;
+        }
     }
     out[0] = out[0] / norm2;
     
 
     for(int i = 0; i < n; i++){
-	for(int j = 0; j < m; j++){
-	    printf("%8.3f ", out[i*m + j]);
-	}
-	putchar('\n');
+        for(int j = 0; j < m; j++){
+            printf("%8.3f ", out[i*m + j]);
+        }
+	   putchar('\n');
     }
     printf("\n");
     
