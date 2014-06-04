@@ -1,3 +1,7 @@
+# Files di test
+bmp
+dct
+
 # Object files
 *.o
 *.ko
