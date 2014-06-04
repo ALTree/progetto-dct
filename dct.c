@@ -2,6 +2,7 @@
 #include <fftw3.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 int main(void)
 {
@@ -27,6 +28,18 @@ int main(void)
 			    FFTW_REDFT10, FFTW_ESTIMATE);
 
     fftw_execute(plan);
+
+    double norm1 = 4 * sqrt(m/2.0) * sqrt(n/2.0);
+    double norm2 = sqrt(2);
+    for(int i = 0; i < n; i++){
+	for(int j = 0; j < m; j++){
+	    out[i*m + j] = out[i*m + j] / norm1;
+	    if(i == 0 || j == 0)
+		out[i*m + j] = out[i*m + j] / norm2;
+	}
+    }
+    out[0] = out[0] / norm2;
+    
 
     for(int i = 0; i < n; i++){
 	for(int j = 0; j < m; j++){
