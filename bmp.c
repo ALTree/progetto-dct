@@ -22,7 +22,7 @@ void print_info(BMPFILEHEADER * file, BMPHEADER * bmp)
     printf("\timage size: %08x \n\n", bmp->image_size);
 }
 
-unsigned char * open_bmp(FILE * fileptr, BMPHEADER * bmp_header)
+uint8_t * open_bmp(FILE * fileptr, BMPHEADER * bmp_header)
 {
     if(fileptr == NULL)
 	return NULL;
@@ -43,31 +43,7 @@ unsigned char * open_bmp(FILE * fileptr, BMPHEADER * bmp_header)
     fseek(fileptr, file_header.offset, SEEK_SET);
 
     uint64_t img_size = bmp_header->width * bmp_header->height;
-    unsigned char * img = malloc(img_size);
-    if(!img){
-	printf("malloc failed @ line %d\n", __LINE__);
-	return NULL;
-    }
-
-    // legge i dati dell'immagine
-    size_t read_code = fread(img, img_size, 1, fileptr);
-    if(read_code != 1){
-	printf("fread failed @ line %d\n", __LINE__);
-	return NULL;
-    }
-    
-    fclose(fileptr);
-    return img;
-}
-
-int main(int argc, char ** argv)
-{
-    if(argc < 2){
-	printf("Usa: %s nomefile", argv[0]);
-	return 1;
-    }
-
-    FILE * fileptr = fopen(argv[1], "rb");
+    uint8_t *    FILE * fileptr = fopen(argv[1], "rb");
     if(fileptr == NULL){
 	printf("fopen failed @ line %d\n", __LINE__);
 	return 1;
@@ -85,4 +61,14 @@ int main(int argc, char ** argv)
     printf("\taltezza: %d px \n", height);
     printf("\tbpp: %d \n", bpp);
     
+    for(int i = 0, j = 0; i < width*height; i++, j++){
+	if(j == width){
+	    putchar('\n');
+	    j = 0;
+	}
+	printf("%d ", img[i]);
+    }
+
+    printf("\n");
+
 }

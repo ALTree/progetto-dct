@@ -25,4 +25,4 @@ void print_info(BMPFILEHEADER *, BMPHEADER *);
 // ritorna un array con i valori dei bits e riempie
 // la struttura BITMAPHEADER passata con le informazioni
 // ricavata dell'header del file
-unsigned char * open_bmp(FILE * , BMPHEADER *);
+uint8_t * open_bmp(FILE * , BMPHEADER *);

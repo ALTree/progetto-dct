@@ -5,24 +5,21 @@
 
 int main(void)
 {
-    int n = 2, m = 3;
+    int n = 3, m = 4;
     int size = n * m;
-    double * in, * out;
+    double * out;
 
     fftw_plan plan;
-    in = fftw_malloc(sizeof(double) * size);
+    //in = fftw_malloc(sizeof(double) * size);
     out = fftw_malloc(sizeof(double) * size);
 
-    for(int i = 0; i < n; i++){
-	for(int j = 0; j < m; j++){
-	    in[i*m + j] = (i*m + j) + 1;
-	}
-    }
+    double in[] = {11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34}; 
     
     for(int i = 0; i < n; i++){
 	for(int j = 0; j < m; j++){
-	    printf("%4f ", in[i*m + j]);
+	    printf("%8.3f ", in[i*m + j]);
 	}
+	putchar('\n');
     }
     printf("\n\n");
     
@@ -33,8 +30,9 @@ int main(void)
 
     for(int i = 0; i < n; i++){
 	for(int j = 0; j < m; j++){
-	    printf("%4f ", out[i*m + j]);
+	    printf("%8.3f ", out[i*m + j]);
 	}
+	putchar('\n');
     }
     printf("\n");
     
