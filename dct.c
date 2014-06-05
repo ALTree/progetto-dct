@@ -11,7 +11,7 @@
 
 double * to_double(int m, int n, uint8_t * array)
 {
-    double * out = malloc(sizeof(double) * m * n);
+    double * out = (double *)malloc(sizeof(double) * m * n);
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++)
             out[i*n + j] = (double)array[i*n + j];
@@ -21,7 +21,7 @@ double * to_double(int m, int n, uint8_t * array)
 
 uint8_t * to_uint8_t(int m, int n, double * array)
 {
-    uint8_t * out = malloc(sizeof(uint8_t) * m * n);
+    uint8_t * out = (uint8_t *)malloc(sizeof(uint8_t) * m * n);
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
             if(array[i*n + j] > 255){
@@ -78,12 +78,12 @@ void denormalizza(int m, int n, double * array)
 double * dct2(int m, int n, uint8_t * array)
 {
 // setup input e output
-    double * out = fftw_malloc(sizeof(double) * m * n);
+    double * out = (double *)fftw_malloc(sizeof(double) * m * n);
     double * in  = to_double(m, n, array);
 
 // do the fftw3 magic
     fftw_plan plan = fftw_plan_r2r_2d(m, n, in, out, FFTW_REDFT10,
-        FFTW_REDFT10, FFTW_ESTIMATE);
+				      FFTW_REDFT10, FFTW_ESTIMATE);
     fftw_execute(plan);
 
 // normalizzazione
@@ -94,7 +94,7 @@ double * dct2(int m, int n, uint8_t * array)
 uint8_t * idct2(int m, int n, double * array)
 {
 // setup input e output
-    double * out = fftw_malloc(sizeof(double) * m * n);
+    double * out = (double *)fftw_malloc(sizeof(double) * m * n);
 
 // denormalizzazione
     denormalizza(m, n, array);
@@ -127,6 +127,7 @@ void print_iarray(int m, int n, uint8_t * array)
     printf("\n");
 }
 
+/*
 int main(void)
 {
     int m = 3, n = 4;
@@ -139,6 +140,5 @@ int main(void)
 
     uint8_t * inv = idct2(m, n, out);
     print_iarray(m, n, inv);
-
-
 }
+*/

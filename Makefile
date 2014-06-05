@@ -1,17 +1,17 @@
-CC = gcc
-CFLAGS = -std=c99 -Wall 
+CC = g++
+CFLAGS = -std=c++11
 IMG = immagini/blu.bmp
+LINKER = -L/usr/X11R6/lib -lm -lpthread -lX11 -lfftw3 -lm
 
-dct: dct.c
-	$(CC) $(CFLAGS) $< -lfftw3 -lm -o $@
+all: main
 
-bmp: bmp.c bmp.h
-	$(CC) $(CFLAGS) $< -o $@
+main: main.c dct.o
+	$(CC) $(CFLAGS) dct.o $(LINKER) $< -o $@
 
-test: bmp
-	./$< $(IMG)
+dct.o: dct.c dct.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
 .PHONY: clean
 clean:
-	rm -f bmp dct
+	rm -f dct main *.o
 

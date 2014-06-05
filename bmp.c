@@ -82,11 +82,13 @@ int main(int argc, char ** argv)
     uint32_t width = img_info.width;
     uint32_t height = img_info.height;
     uint16_t bpp = img_info.bpp;
+    uint32_t compression = img_info.compression;
 
     printf(" >> img loaded \n");
     printf("\tlarghezza: %d px \n", width);
     printf("\taltezza: %d px \n", height);
     printf("\tbpp: %d \n", bpp);
+    printf("\tcompression: %d \n", compression);
 
     for(int i = 0, j = 0; i < width*height; i++, j++){
         if(j == width){
