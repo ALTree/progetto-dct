@@ -1,6 +1,5 @@
 CC = g++
 CFLAGS = -std=c++11
-IMG = immagini/blu.bmp
 LINKER = -L/usr/X11R6/lib -lm -lpthread -lX11 -lfftw3 -lm
 
 all: main

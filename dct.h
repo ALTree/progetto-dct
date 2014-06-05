@@ -15,8 +15,11 @@ void denormalizza(int m, int n, double *);
 // dct2 sull'array uint8_t
 double * dct2(int, int, uint8_t *);
 
-// dct2 sull'array uint8_t
+// idct2 sull'array uint8_t
 uint8_t * idct2(int, int, double *);
+
+// stampa istogramma
+void hist(int, int, int, double *);
 
 // stampa array
 void print_array(int, int, double *);

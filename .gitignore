@@ -1,6 +1,10 @@
 # Files di test
 bmp
 dct
+main
+
+# istogramma
+hist.txt
 
 # Object files
 *.o
