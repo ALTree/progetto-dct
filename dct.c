@@ -19,7 +19,6 @@ double * to_double(int m, int n, uint8_t * array)
     return out;
 }
 
-
 uint8_t * to_uint8_t(int m, int n, double * array)
 {
     uint8_t * out = malloc(sizeof(uint8_t) * m * n);
@@ -76,8 +75,6 @@ void denormalizza(int m, int n, double * array)
         array[j] *= norm2;
 }
 
-
-
 double * dct2(int m, int n, uint8_t * array)
 {
 // setup input e output
@@ -106,8 +103,6 @@ uint8_t * idct2(int m, int n, double * array)
     fftw_plan plan = fftw_plan_r2r_2d(m, n, array, out, FFTW_REDFT01,
         FFTW_REDFT01, FFTW_ESTIMATE);
     fftw_execute(plan);
-
-    print_array(m, n, out);
 
     return to_uint8_t(m, n, out);
 }
