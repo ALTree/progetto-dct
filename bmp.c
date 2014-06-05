@@ -27,26 +27,53 @@ uint8_t * open_bmp(FILE * fileptr, BMPHEADER * bmp_header)
     if(fileptr == NULL)
         return NULL;
 
-    // legge file header
+// legge file header
     BMPFILEHEADER file_header;
     fread(&file_header, sizeof(BMPFILEHEADER), 1, fileptr);
 
-    // controlla bmp magic number
+// controlla bmp magic number
     if(file_header.signature != 0x4D42){
         printf("File signature doesn't match!\n");
-    	return NULL;
+        return NULL;
     }
-    // legge bmp header
+// legge bmp header
     fread(bmp_header, sizeof(BMPHEADER), 1, fileptr);
-    
-    // muove il file pointer all'inizio dei dati dell'immagine
+
+// muove il file pointer all'inizio dei dati dell'immagine
     fseek(fileptr, file_header.offset, SEEK_SET);
 
     uint64_t img_size = bmp_header->width * bmp_header->height;
-    uint8_t *    FILE * fileptr = fopen(argv[1], "rb");
+
+
+    unsigned char * img = malloc(img_size);
+    if(!img){
+        printf("malloc failed @ line %d\n", __LINE__);
+        return NULL;
+    }
+
+// legge i dati dell'immagine
+    size_t read_code = fread(img, img_size, 1, fileptr);
+    if(read_code != 1){
+        printf("fread failed @ line %d\n", __LINE__);
+        return NULL;
+    }
+
+    fclose(fileptr);
+    return img;
+}
+
+int main(int argc, char ** argv)
+{
+    if(argc < 2){
+        printf("Usa: %s nomefile", argv[0]);
+        return 1;
+    }
+
+    FILE * fileptr = fopen(argv[1], "rb");
+
     if(fileptr == NULL){
-    	printf("fopen failed @ line %d\n", __LINE__);
-    	return 1;
+        printf("fopen failed @ line %d\n", __LINE__);
+        return 1;
     }
 
     BMPHEADER img_info;
@@ -60,11 +87,11 @@ uint8_t * open_bmp(FILE * fileptr, BMPHEADER * bmp_header)
     printf("\tlarghezza: %d px \n", width);
     printf("\taltezza: %d px \n", height);
     printf("\tbpp: %d \n", bpp);
-    
+
     for(int i = 0, j = 0; i < width*height; i++, j++){
-    	if(j == width){
-    	    putchar('\n');
-    	    j = 0;
+        if(j == width){
+            putchar('\n');
+            j = 0;
         }
         printf("%d ", img[i]);
     }
