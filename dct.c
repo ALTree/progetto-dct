@@ -59,11 +59,12 @@ void denormalizza(int m, int n, double * array)
 {
     double norm1 = 4 * sqrt(m/2.0) * sqrt(n/2.0);
     double norm2 = sqrt(2);
+    double norm3 = 4 * m * n;
 
 // normalizzazione globale
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++)
-            array[i*n + j] *= norm1;
+            array[i*n + j] = array[i*n + j] / norm3 * norm1;
     }
 
 // normalizzazione prima riga
@@ -83,7 +84,7 @@ double * dct2(int m, int n, uint8_t * array)
     double * out = fftw_malloc(sizeof(double) * m * n);
     double * in  = to_double(m, n, array);
 
-// do the fftw3 magic 
+// do the fftw3 magic
     fftw_plan plan = fftw_plan_r2r_2d(m, n, in, out, FFTW_REDFT10,
         FFTW_REDFT10, FFTW_ESTIMATE);
     fftw_execute(plan);
