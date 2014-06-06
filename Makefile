@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -std=c++11
-LINKER = -lpthread -lX11 -lfftw3 -lm
+LINKER = -lpthread -lfftw3 -lm
 
 all: main
 

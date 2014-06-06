@@ -9,12 +9,13 @@ using namespace cimg_library;
 
 int main(int argc, char ** argv)
 {
-    if(argc < 3){
-        printf("Usa:\t %s nome_file numero_bins \n", argv[0]);
+    if(argc < 4){
+        printf("Usa:\t %s nome_file numero_bins taglio \n", argv[0]);
         return 1;
     }
 
     int bins = atoi(argv[2]);
+    int cut = atoi(argv[3]);
     
     // leggi immagine
     CImg<unsigned char> image(argv[1]);
@@ -28,9 +29,17 @@ int main(int argc, char ** argv)
     
     // esporta istogramma
     hist(m, n, bins, dct);
+    system("python graph.py");
+
+
+    // tagliataglia
+    cut_dct(m, n, cut, dct);
     
     // calcola IDCT2
     uint8_t * img2 = idct2(m, n, dct);
 
+    // salva img2 su file
+    CImg<unsigned char> image2(img2, n, m, 1, 1);
+    image2.save(strcat(argv[1], "cut.bmp"), -1, 3);;
     
 }
