@@ -118,7 +118,7 @@ void cut_dct(int m, int n, double val, double * array)
     }
 }
 
-void hist(int m, int n, int bins, double * array)
+void hist(int m, int n, int bins, double * array, char * name)
 {
     // cerchiamo il valore massimo in array
     double max = -1.0;
@@ -137,7 +137,7 @@ void hist(int m, int n, int bins, double * array)
 	}
     }
 
-    FILE * fileptr = fopen("hist.txt", "w");
+    FILE * fileptr = fopen(name, "w");
     fprintf(fileptr, "bins\t%d \n", bins);
     fprintf(fileptr, "width\t%.3f \n", bins_width);
     fprintf(fileptr, "max\t%.3f \n", max);

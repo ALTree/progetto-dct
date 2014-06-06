@@ -3,11 +3,8 @@
 from __future__ import print_function
 import numpy as np
 import pylab as P
-import sys
 
-
-
-def main(nome):
+def main(nome, frase):
 	# valori dei parametri
 	parametri = {}
 
@@ -40,14 +37,10 @@ def main(nome):
 
 	#P.xticks(base, tuple(base))
 	P.xlabel('Frequenze')
-	tit = 'Istogramma delle frequenze della DCT con ' + str(parametri['bins']) + ' bins'
+	tit = 'Istogramma delle frequenze della DCT con ' + str(parametri['bins']) + ' bins -' + frase
 	P.suptitle(tit)
 
-	P.show()
-
 if __name__ == '__main__':
-	if len(sys.argv) == 2:
-		main(sys.argv[1])
-	else:
-		print('Uso: python graph.py nomefile')
-
+	main("hist.txt", " pre taglio")
+	main("hist2.txt", " post taglio")
+	P.show()

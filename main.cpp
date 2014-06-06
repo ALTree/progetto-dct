@@ -28,20 +28,16 @@ int main(int argc, char ** argv)
     double * dct = dct2(m, n, img);
 
     // esporta istogramma
-    hist(m, n, bins, dct);
-
-    if(argc==5){
-        system("python graph.py hist.txt");
-    }
+    hist(m, n, bins, dct, "hist.txt");
 
     // tagliataglia
     cut_dct(m, n, cut, dct);
 
     // esporta istogramma
-    hist(m, n, bins, dct);
+    hist(m, n, bins, dct, "hist2.txt");
 
     if(argc==5){
-        system("python graph.py hist.txt");
+        system("python graph.py");
     }
     
     // calcola IDCT2

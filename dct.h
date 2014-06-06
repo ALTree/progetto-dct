@@ -22,7 +22,7 @@ uint8_t * idct2(int, int, double *);
 void cut_dct(int, int, double, double *);
 
 // stampa istogramma
-void hist(int, int, int, double *);
+void hist(int, int, int, double *, char *);
 
 // stampa array
 void print_array(int, int, double *);
