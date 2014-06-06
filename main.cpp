@@ -11,6 +11,7 @@ int main(int argc, char ** argv)
 {
     if(argc < 4){
         printf("Usa:\t %s nome_file numero_bins taglio \n", argv[0]);
+        printf("Usa -h alla fine del comando per plottare l'istogramma");
         return 1;
     }
 
@@ -26,11 +27,12 @@ int main(int argc, char ** argv)
     // calcola DCT2
     double * dct = dct2(m, n, img);
 
-    
     // esporta istogramma
     hist(m, n, bins, dct);
-    system("python graph.py");
 
+    if(argc==5){
+        system("python graph.py");
+    }
 
     // tagliataglia
     cut_dct(m, n, cut, dct);
