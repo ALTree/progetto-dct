@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 import numpy as np
 import pylab as P
-import os
-import StringIO
-import sys
 
 # valori dei parametri
 parametri = {}
@@ -24,10 +21,11 @@ with open('hist.txt') as t:
 
 print(parametri)
 print(hist)
-
+print('len hist: ', len(hist))
 base = np.arange(0, parametri['max'], parametri['width'])
 
 print(base)
+print('len base: ', len(hist))
 
 width = parametri['width'] * 0.8
 
