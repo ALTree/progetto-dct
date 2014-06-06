@@ -12,7 +12,7 @@
 
 double * to_double(int m, int n, uint8_t * array)
 {
-    double * out = (double *)malloc(sizeof(double) * m * n);
+    double * out = new double[m*n];
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++)
             out[i*n + j] = (double)array[i*n + j];
@@ -22,7 +22,7 @@ double * to_double(int m, int n, uint8_t * array)
 
 uint8_t * to_uint8_t(int m, int n, double * array)
 {
-    uint8_t * out = (uint8_t *)malloc(sizeof(uint8_t) * m * n);
+    uint8_t * out = new uint8_t[m*n];
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
             if(array[i*n + j] > 255){
@@ -79,7 +79,7 @@ void denormalizza(int m, int n, double * array)
 double * dct2(int m, int n, uint8_t * array)
 {
     // setup input e output
-    double * out = (double *)fftw_malloc(sizeof(double) * m * n);
+    double * out = new double[m*n];
     double * in  = to_double(m, n, array);
 
     // do the fftw3 magic
@@ -95,7 +95,7 @@ double * dct2(int m, int n, uint8_t * array)
 uint8_t * idct2(int m, int n, double * array)
 {
     // setup input e output
-    double * out = (double *)fftw_malloc(sizeof(double) * m * n);
+    double * out = new double[m*n];
 
     // denormalizzazione
     denormalizza(m, n, array);
@@ -130,7 +130,7 @@ void hist(int m, int n, int bins, double * array, char * name)
     }
 
     double bins_width = (max + 100.0) / bins;
-    int * hist = (int *)calloc(bins, sizeof(int));
+    int * hist = new int[bins]();
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
 	    hist[ (int)abs(array[i*n + j] / bins_width) ]++;
