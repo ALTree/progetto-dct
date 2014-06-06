@@ -1,3 +1,4 @@
+
 #include <complex.h>
 #include <fftw3.h>
 #include <inttypes.h>
@@ -107,7 +108,7 @@ uint8_t * idct2(int m, int n, double * array)
     return to_uint8_t(m, n, out);
 }
 
-void * cut_dct(int m, int n, double val, double * array)
+void cut_dct(int m, int n, double val, double * array)
 {
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){

@@ -19,7 +19,7 @@ double * dct2(int, int, uint8_t *);
 uint8_t * idct2(int, int, double *);
 
 // taglio frequenze
-void * cut_dct(int, int, double, double *);
+void cut_dct(int, int, double, double *);
 
 // stampa istogramma
 void hist(int, int, int, double *);
