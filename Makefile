@@ -4,7 +4,7 @@ LINKER = -lpthread -lfftw3 -lm
 
 all: main
 
-main: main.c dct.o
+main: main.cpp dct.o
 	$(CC) $(CFLAGS) dct.o $(LINKER) $< -o $@
 
 dct.o: dct.cpp dct.h
