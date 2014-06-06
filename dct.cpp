@@ -118,7 +118,7 @@ void cut_dct(int m, int n, double val, double * array)
     }
 }
 
-void hist(int m, int n, int bins, double * array, char * name)
+void hist(int m, int n, int bins, double * array, const char * name)
 {
     // cerchiamo il valore massimo in array
     double max = -1.0;
