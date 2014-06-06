@@ -130,7 +130,7 @@ void hist(int m, int n, int bins, double * array)
     fprintf(fileptr, "bins\t%d \n", bins);
     fprintf(fileptr, "width\t%.3f \n", bins_width);
     fprintf(fileptr, "max\t%.3f \n", max);
-    for(int i = 0; i <= bins; i++)
+    for(int i = 0; i < bins; i++)
 	fprintf(fileptr, "%d\n", hist[i]);
     
 }
