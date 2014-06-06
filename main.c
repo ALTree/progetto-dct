@@ -25,10 +25,12 @@ int main(int argc, char ** argv)
     // calcola DCT2
     double * dct = dct2(m, n, img);
 
+    
     // esporta istogramma
     hist(m, n, bins, dct);
-
+    
     // calcola IDCT2
     uint8_t * img2 = idct2(m, n, dct);
+
     
 }

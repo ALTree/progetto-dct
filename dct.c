@@ -110,7 +110,7 @@ uint8_t * idct2(int m, int n, double * array)
 void hist(int m, int n, int bins, double * array)
 {
     // cerchiamo il valore massimo in array
-    double max = -1;
+    double max = -1.0;
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
 	    if(array[i*n + j] > max)
@@ -119,10 +119,11 @@ void hist(int m, int n, int bins, double * array)
     }
 
     double bins_width = max / bins;
-    int * hist = (int *)calloc(bins+1, sizeof(int));
+    int * hist = (int *)calloc(bins, sizeof(int));
     for(int i = 0; i < m; i++){
-        for(int j = 0; j < n; j++)
-	    hist[ (int)(array[i*n + j] / bins_width) ]++;
+        for(int j = 0; j < n; j++){
+	    hist[ (int)abs(array[i*n + j] / bins_width) ]++;
+	}
     }
 
     FILE * fileptr = fopen("hist.txt", "w");
