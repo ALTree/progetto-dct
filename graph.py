@@ -1,41 +1,53 @@
 #!/usr/bin/env python
+
+from __future__ import print_function
 import numpy as np
 import pylab as P
-
-# valori dei parametri
-parametri = {}
-
-# istogramma
-hist = np.array([], dtype='int32')
+import sys
 
 
-# smacinamento file col risultato
-with open('hist.txt') as t:
-	for _ in range(3):
-		row = t.readline()
-		desc = row.split('\t')
-		parametri[desc[0]] = float(desc[1][:-2])
-	
-	for row in t:
-		hist = np.append(hist, int(row[:-1]))
 
-base = np.arange(0, parametri['max'], parametri['width'])
+def main(nome):
+	# valori dei parametri
+	parametri = {}
 
-width = parametri['width']
-
-#
-# comparazione tempi iterativa simmetrica
-#
-P.figure()
+	# istogramma
+	hist = np.array([], dtype='int32')
 
 
-P.bar(base, hist, width=width, color='b', label='simmetriche', log=True)
+	# smacinamento file col risultato
+	with open(nome) as t:
+		for _ in range(3):
+			row = t.readline()
+			desc = row.split('\t')
+			parametri[desc[0]] = float(desc[1][:-2])
+		
+		for row in t:
+			hist = np.append(hist, int(row[:-1]))
+
+	base = np.arange(0, parametri['max'], parametri['width'])
+
+	width = parametri['width']
+
+	#
+	# comparazione tempi iterativa simmetrica
+	#
+	P.figure()
 
 
-#P.xticks(base, tuple(base))
-P.xlabel('Frequenze')
-tit = 'Istogramma delle frequenze della DCT con ' + str(parametri['bins']) + ' bins'
-P.suptitle(tit)
+	P.bar(base, hist, width=width, color='b', label='simmetriche', log=True)
 
-P.show()
+
+	#P.xticks(base, tuple(base))
+	P.xlabel('Frequenze')
+	tit = 'Istogramma delle frequenze della DCT con ' + str(parametri['bins']) + ' bins'
+	P.suptitle(tit)
+
+	P.show()
+
+if __name__ == '__main__':
+	if len(sys.argv) == 2:
+		main(sys.argv[1])
+	else:
+		print('Uso: python graph.py nomefile')
 
