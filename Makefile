@@ -7,7 +7,7 @@ all: main
 main: main.c dct.o
 	$(CC) $(CFLAGS) dct.o $(LINKER) $< -o $@
 
-dct.o: dct.c dct.h
+dct.o: dct.cpp dct.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 .PHONY: clean
