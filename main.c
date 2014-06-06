@@ -1,6 +1,7 @@
 #include <inttypes.h>
 #include <stdlib.h>
 #include <stdio.h>
+#define cimg_display 0
 #include "CImg.h"
 #include "dct.h"
 
