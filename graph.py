@@ -19,15 +19,9 @@ with open('hist.txt') as t:
 	for row in t:
 		hist = np.append(hist, int(row[:-1]))
 
-print(parametri)
-print(hist)
-print('len hist: ', len(hist))
 base = np.arange(0, parametri['max'], parametri['width'])
 
-print(base)
-print('len base: ', len(hist))
-
-width = parametri['width'] * 0.8
+width = parametri['width']
 
 #
 # comparazione tempi iterativa simmetrica
@@ -39,8 +33,7 @@ P.bar(base, hist, width=width, color='b', label='simmetriche', log=True)
 
 
 #P.xticks(base, tuple(base))
-P.xlabel('Metodo utilizzato')
-P.ylabel('Tempi')
+P.xlabel('Frequenze')
 tit = 'Istogramma delle frequenze della DCT con ' + str(parametri['bins']) + ' bins'
 P.suptitle(tit)
 
