@@ -118,7 +118,7 @@ void hist(int m, int n, int bins, double * array)
 	}
     }
 
-    double bins_width = max / bins;
+    double bins_width = (max + 100.0) / bins;
     int * hist = (int *)calloc(bins, sizeof(int));
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
@@ -127,9 +127,9 @@ void hist(int m, int n, int bins, double * array)
     }
 
     FILE * fileptr = fopen("hist.txt", "w");
-    fprintf(fileptr, "bins  : %8d \n", bins);
-    fprintf(fileptr, "width :  %10.2f \n", bins_width);
-    fprintf(fileptr, "max   :  %10.2f \n", max);
+    fprintf(fileptr, "bins\t%d \n", bins);
+    fprintf(fileptr, "width\t%.3f \n", bins_width);
+    fprintf(fileptr, "max\t%.3f \n", max);
     for(int i = 0; i <= bins; i++)
 	fprintf(fileptr, "%d\n", hist[i]);
     
