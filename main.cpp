@@ -31,11 +31,18 @@ int main(int argc, char ** argv)
     hist(m, n, bins, dct);
 
     if(argc==5){
-        system("python graph.py");
+        system("python graph.py hist.txt");
     }
 
     // tagliataglia
     cut_dct(m, n, cut, dct);
+
+    // esporta istogramma
+    hist(m, n, bins, dct);
+
+    if(argc==5){
+        system("python graph.py hist.txt");
+    }
     
     // calcola IDCT2
     uint8_t * img2 = idct2(m, n, dct);
