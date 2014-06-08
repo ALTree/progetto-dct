@@ -59,12 +59,11 @@ void denormalizza(int m, int n, double * array)
 {
     double norm1 = 4 * sqrt(m/2.0) * sqrt(n/2.0);
     double norm2 = sqrt(2);
-    double norm3 = 4 * m * n;
 
     // normalizzazione globale
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++)
-            array[i*n + j] = array[i*n + j] / norm3 * norm1;
+            array[i*n + j] *= norm1;
     }
 
     // normalizzazione prima riga
@@ -74,6 +73,16 @@ void denormalizza(int m, int n, double * array)
     // normalizzazione prima colonna
     for(int j = 0; j < (m*n); j+=n)
         array[j] *= norm2;
+}
+
+void scala(int m, int n, double * array)
+{
+    double scale = 4.0 * m * n;
+    // scala globale
+    for(int i = 0; i < m; i++){
+        for(int j = 0; j < n; j++)
+            array[i*n + j] = array[i*n + j] / scale;
+    }
 }
 
 double * dct2(int m, int n, uint8_t * array)
@@ -104,7 +113,8 @@ uint8_t * idct2(int m, int n, double * array)
     fftw_plan plan = fftw_plan_r2r_2d(m, n, array, out, FFTW_REDFT01,
 				      FFTW_REDFT01, FFTW_ESTIMATE);
     fftw_execute(plan);
-
+    scala(m, n, out);
+    
     return to_uint8_t(m, n, out);
 }
 

@@ -40,11 +40,11 @@ int n = image.width();          //         e larghezza dell'immagine
 
 Da notare che la matrice che contiene i pixel è di tipo \texttt{uint8\_t}, dato che la consegna del progetto richiedeva di operare esclusivamente su immagini \emph{greyscale}. CImg è in grado di leggere senza problemi immagini BMP compresse con RLE, e i dati ritornati dal metodo \texttt{data( )} rappresentano i pixel già scompattati.
 
-\subsection*{DCT}
+\subsection*{DCT2}
 
 Scrivendo in C99, è banale chiamare direttamente FFTW3. La libreria è facile da installare e ben documentata. La chiamata avviene in due passaggi: prima di tutto si crea un piano (\emph{plan}) con le caratteristiche della FT che si vuole operare sui dati, successivamente lo si esegue.
 
-Le funzione da usarsi per la creazione di un \emph{plan} di DCT bidimensionale da $\mathbb{R}$ ad $\mathbb{R}$ è \texttt{fftw\_plan\_r2r\_2d( )}. Alla funzione, oltre che i parametri con i dati da trasformare, vanno passate due flag (una per ognuna delle due dimensioni) che specificano quale tipo di trasformata applicare. Nel nostro caso, per entrambe, si trattava di \texttt{FFTW\_REDFT10}:
+Le funzione da usarsi per la creazione di un \emph{plan} di DCT bidimensionale da $\mathbb{R}$ ad $\mathbb{R}$ è \texttt{fftw\_plan\_r2r\_2d( )}. Alla funzione, oltre che i parametri con i dati da trasformare, vanno passate due flag (una per ognuna delle due dimensioni) che specificano quale tipo di trasformata applicare. Nel nostro caso, per entrambe, si tratta di \texttt{FFTW\_REDFT10}:
 
 FFTW\_REDFT10 (DCT-II, 'the' DCT):
 \begin{quotation}
@@ -71,7 +71,7 @@ double * dct2(int m, int n, uint8_t * array)
 
 La funzione \texttt{dct2} prende un array di \texttt{uint8\_t} e restituisce un array di \texttt{double} contenente la DCT2 dell'input, normalizzata come richiesto dalla consegna per riflettere i risultati della funzione \texttt{dct2} di Matlab.
 
-La funzione di normalizzazione è implementata come indicato dalla consegna:
+La funzione di normalizzazione è implementata come indicato nella consegna:
 
 \begin{minted}[frame=single]{c}
 void normalizza(int m, int n, double * array)
@@ -92,7 +92,7 @@ void normalizza(int m, int n, double * array)
 }
 \end{minted}
 
-\subsubsection*{Calcolo Istogrammi}
+\subsection*{Calcolo Istogrammi}
 Per il calcolo degli istogrammi, una funzione \texttt{hist( )} accetta come parametro il numero di \emph{bins} e dopo averne calcolato la larghezza (basandosi sul valore massimo contenuto nella DCT), conteggia, per ognuno dei \emph{bins}, il numero di coefficienti presenti all'interno del \emph{bin}.
 
 \begin{minted}[frame=single]{c}
@@ -104,5 +104,40 @@ void hist(int m, int n, int bins, double * array, const char * name)
 
 \texttt{hist( )} salva su file il risultato della computazione.
 
+\subsection*{Taglio delle frequenze}
+
+Dopo la visualizzazione dell'istogramma delle frequenze, l'utente può specificare un valore di soglia per il taglio della DCT2: ogni componente che sia in valore assoluto minore del valore di soglia viene portata a zero.
+
+
+\begin{minted}[frame=single]{c}
+void cut_dct(int m, int n, double val, double * array)
+{
+    for(int i = 0; i < m; i++){
+        for(int j = 0; j < n; j++){
+            if(abs(array[i*n + j]) < val)
+                array[i*n + j] = 0.0;
+        }
+    }
+}
+\end{minted}
+
+La modifica è fatta, per ragioni di efficienza, \emph{in-place}: l'array originale viene perso e i valori originali sovrascritti in memoria.
+
+\subsection*{IDCT2}
+
+La funzione che opera il calcolo della IDCT2 è analoga a \texttt{dct2( )}. Per la creazione del piano è necessario passare come flag DCT \texttt{FFTW\_REDFT01} (che è l'inversa della \texttt{FFTW\_REDFT01} usata in precedenza per la DCT2).
+
+
 \end{document}
+
+
+
+
+
+
+
+
+
+
+
 

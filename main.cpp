@@ -11,12 +11,24 @@ int main(int argc, char ** argv)
 {
     if(argc < 4){
         printf("Usa:\t %s nome_file numero_bins taglio \n", argv[0]);
-        printf("Usa -h alla fine del comando per plottare l'istogramma");
+        printf("Usa -h alla fine del comando per plottare l'istogramma \n");
         return 1;
     }
 
     int bins = atoi(argv[2]);
     int cut = atoi(argv[3]);
+
+    /*
+    uint8_t in[] = {11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34};
+    print_iarray(3, 4, in);
+    
+    double * out = dct2(3, 4, in);
+    print_array(3, 4, out);
+
+    uint8_t * in2 = idct2(3, 4, out);
+    print_iarray(3, 4, in2);
+    */
+
     
     // leggi immagine
     CImg<unsigned char> image(argv[1]);
@@ -46,5 +58,6 @@ int main(int argc, char ** argv)
     // salva img2 su file
     CImg<unsigned char> image2(img2, n, m, 1, 1);
     image2.save(strcat(argv[1], "cut.bmp"), -1, 3);;
+    
     
 }
