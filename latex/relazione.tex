@@ -55,7 +55,7 @@ even around $j=-0.5$ and even around $j=n-0.5$
 double * dct2(int m, int n, uint8_t * array)
 {
     // setup input e output
-    double * out = malloc(sizeof(double) * m * n);
+    double * out = (double *) malloc(sizeof(double) * m * n);
     double * in  = to_double(m, n, array);
 
     // do the fftw3 magic
@@ -106,7 +106,7 @@ void hist(int m, int n, int bins, double * array, const char * name)
 
 \subsection*{Taglio delle frequenze}
 
-Dopo la visualizzazione dell'istogramma delle frequenze, l'utente può specificare un valore di soglia per il taglio della DCT2: ogni componente che sia in valore assoluto minore del valore di soglia viene portata a zero.
+Dopo la visualizzazione dell'istogramma delle frequenze, l'utente può specificare un valore di soglia per il taglio della DCT2: ogni componente che sia in valore assoluto minore del valore di soglia è portata a zero.
 
 
 \begin{minted}[frame=single]{c}
@@ -125,7 +125,7 @@ La modifica è fatta, per ragioni di efficienza, \emph{in-place}: l'array origin
 
 \subsection*{IDCT2}
 
-La funzione che opera il calcolo della IDCT2 è simila alla \texttt{dct2( )}. Per la creazione del piano è necessario passare come flag DCT \texttt{FFTW\_REDFT01} (che è l'inversa della \texttt{FFTW\_REDFT10} usata in precedenza per la DCT2), mentre la denormalizzazione divide per quello che la normalizzazione ha moltiplicato.
+La funzione che opera il calcolo della IDCT2 è simile alla \texttt{dct2( )}. Per la creazione del piano è necessario passare come flag DCT \texttt{FFTW\_REDFT01} (che è l'inversa della \texttt{FFTW\_REDFT10} usata in precedenza per la DCT2), mentre la denormalizzazione divide per quello che la normalizzazione ha moltiplicato.
 
 Dopo la denormalizzazione e il calcolo della IDCT2 (di cui non riportiamo il codice, essendo questo del tutto analogo a quello della \texttt{dct2( )} precedentemente descritta), è necessario applicare una trasformazione ulteriore. Infatti (citando dalla documentazione della FFTW3):
 \begin{quotation}
@@ -155,7 +155,7 @@ CImg<uint8_t> image2(img2, n, m, 1, 1);
 image2.save(strcat(argv[1], "cut.bmp"), -1, 3);;
 \end{minted}
 
-nella prima linea viene costruito un oggetto CImg (\texttt{image2}) a partire dalla matrice dei pixel risultato della IDCT2 (\texttt{img2}). Nella seconda linea l'oggetto viene salvato su file con suffisso "cut" nel nome.
+nella prima riga viene costruito un oggetto CImg (\texttt{image2}) a partire dalla matrice dei pixel risultato della IDCT2 (\texttt{img2}). Nella seconda riga l'oggetto viene salvato su file con suffisso "cut" nel nome.
 
 \section*{Risultati dei test}
 
