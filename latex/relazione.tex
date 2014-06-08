@@ -4,6 +4,7 @@
 
 \usepackage{amsmath, amsfonts, amssymb}
 \usepackage{graphicx, booktabs}
+\usepackage{minted}
 
 \usepackage{multirow}
 \usepackage{parskip}
@@ -18,6 +19,90 @@
 Descriviamo l'implementazione di una serie di test riguardanti l'applicazione di una trasformata DCT ad immagini bitmap \textit{grayscale}, il taglio di alcune delle frequenze della trasformata, l'applicazione della IDCT alla matrice risultante, e il confronto con l'originale dell'immagine BMP ottenuta dopo il taglio.
 \end{abstract}
 
-\section*{FFTW}
+\section*{Implementazione}
+
+In questa sezione diamo una descrizione dell'implementazione dei test richiesti dalla consegna. Le parti di lettura file BMP, calcolo DCT2 e IDCT2, taglio delle frequenze, e ri-esportazione dell'immagine sono scritte in C (compilato come C++ per via della dipendenza da una libreria per la manipolazione di immagini da noi utilizzata, scritta in C++). Il codice che disegna e stampa a schermo l'istogramma delle frequenze è scritto in Python.
+
+\subsection*{Lettura delle immagini}
+
+Le immagini campione fornite su \texttt{k.matapp.unimib.it} non sono memorizzate come BMP pure e senza compressione (ovvero: il file non contiene semplicemente una matrice con i valori in \emph{greyscale} dei pixel), ma sono compresse usando una \emph{run-length encoding} a 8 bits. Per questo motivo, abbiamo scartato l'idea di scrivere "a mano" un lettore di files BMP, e deciso di utilizzare una libreria esterna (possibilmente il più leggera possibile) per l'importazione delle immagini.
+
+Una libreria di semplice utilizzo che abbiamo trovato è CImg\footnote{cimg.sourceforge.net}, scritta in C++. Non richiede installazione, e consiste in un unico \emph{header file} \texttt{CImg.h} che va semplicemente incluso nella \emph{directory} del progetto. L'utilizzo di una libreria C++ ci ha costretti a compilare il resto del nostro codice (C99 puro) come C++, ma le differenze tra i due linguaggi sono minimali e gli adattamenti che abbiamo dovuto fare sul codice già scritto sono stati di poco conto.
+
+Il codice utilizzato per la lettura dell'immagine è il seguente:
+
+\begin{minted}[frame=single]{c++}
+CImg<uint8_t> image(argv[1]);   // argv[1] contiene il nome del file
+uint8_t * img = image.data();   // i dati rilevanti salvati in un array
+int m = image.height();         // estraendo poi dall'header altezza
+int n = image.width();          //         e larghezza dell'immagine
+\end{minted}
+
+Da notare che la matrice che contiene i pixel è di tipo \texttt{uint8\_t}, dato che la consegna del progetto richiedeva di operare esclusivamente su immagini \emph{greyscale}. CImg è in grado di leggere senza problemi immagini BMP compresse con RLE, e i dati ritornati dal metodo \texttt{data( )} rappresentano i pixel già scompattati.
+
+\subsection*{DCT}
+
+Scrivendo in C99, è banale chiamare direttamente FFTW3. La libreria è facile da installare e ben documentata. La chiamata avviene in due passaggi: prima di tutto si crea un piano (\emph{plan}) con le caratteristiche della FT che si vuole operare sui dati, successivamente lo si esegue.
+
+Le funzione da usarsi per la creazione di un \emph{plan} di DCT bidimensionale da $\mathbb{R}$ ad $\mathbb{R}$ è \texttt{fftw\_plan\_r2r\_2d( )}. Alla funzione, oltre che i parametri con i dati da trasformare, vanno passate due flag (una per ognuna delle due dimensioni) che specificano quale tipo di trasformata applicare. Nel nostro caso, per entrambe, si trattava di \texttt{FFTW\_REDFT10}:
+
+FFTW\_REDFT10 (DCT-II, 'the' DCT):
+\begin{quotation}
+even around $j=-0.5$ and even around $j=n-0.5$
+\end{quotation}
+
+\begin{minted}[frame=single]{c}
+double * dct2(int m, int n, uint8_t * array)
+{
+    // setup input e output
+    double * out = malloc(sizeof(double) * m * n);
+    double * in  = to_double(m, n, array);
+
+    // do the fftw3 magic
+    fftw_plan plan = fftw_plan_r2r_2d(m, n, in, out, FFTW_REDFT10,
+				      FFTW_REDFT10, FFTW_ESTIMATE);
+    fftw_execute(plan);
+
+    // normalizzazione
+    normalizza(m, n, out);
+    return out;
+}
+\end{minted}
+
+La funzione \texttt{dct2} prende un array di \texttt{uint8\_t} e restituisce un array di \texttt{double} contenente la DCT2 dell'input, normalizzata come richiesto dalla consegna per riflettere i risultati della funzione \texttt{dct2} di Matlab.
+
+La funzione di normalizzazione è implementata come indicato dalla consegna:
+
+\begin{minted}[frame=single]{c}
+void normalizza(int m, int n, double * array)
+{
+    double norm1 = 4 * sqrt(m/2.0) * sqrt(n/2.0);
+    double norm2 = sqrt(2);
+    
+    for(int i = 0; i < m; i++){            // globale
+        for(int j = 0; j < n; j++)
+            array[i*n + j] /= norm1;     
+    }
+
+    for(int i = 0; i < n; i++)            // prima riga
+        array[i] /= norm2;
+
+    for(int j = 0; j < (m*n); j+=n)       // prima colonna
+        array[j] /= norm2;
+}
+\end{minted}
+
+\subsubsection*{Calcolo Istogrammi}
+Per il calcolo degli istogrammi, una funzione \texttt{hist( )} accetta come parametro il numero di \emph{bins} e dopo averne calcolato la larghezza (basandosi sul valore massimo contenuto nella DCT), conteggia, per ognuno dei \emph{bins}, il numero di coefficienti presenti all'interno del \emph{bin}.
+
+\begin{minted}[frame=single]{c}
+void hist(int m, int n, int bins, double * array, const char * name)
+{
+   // TODO
+}
+\end{minted}
+
+\texttt{hist( )} salva su file il risultato della computazione.
 
 \end{document}
+
