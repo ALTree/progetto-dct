@@ -1,4 +1,4 @@
-/hist2.txt
+
 # Files di test
 bmp
 dct
@@ -6,6 +6,12 @@ main
 
 # istogramma
 hist.txt
+hist2.txt
+
+latex/*
+!latex/relazione.tex
+!latex/images/
+!latex/images/*
 
 # cartella img
 /immagini
