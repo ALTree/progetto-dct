@@ -125,7 +125,40 @@ La modifica è fatta, per ragioni di efficienza, \emph{in-place}: l'array origin
 
 \subsection*{IDCT2}
 
-La funzione che opera il calcolo della IDCT2 è analoga a \texttt{dct2( )}. Per la creazione del piano è necessario passare come flag DCT \texttt{FFTW\_REDFT01} (che è l'inversa della \texttt{FFTW\_REDFT01} usata in precedenza per la DCT2).
+La funzione che opera il calcolo della IDCT2 è simila alla \texttt{dct2( )}. Per la creazione del piano è necessario passare come flag DCT \texttt{FFTW\_REDFT01} (che è l'inversa della \texttt{FFTW\_REDFT10} usata in precedenza per la DCT2), mentre la denormalizzazione divide per quello che la normalizzazione ha moltiplicato.
+
+Dopo la denormalizzazione e il calcolo della IDCT2 (di cui non riportiamo il codice, essendo questo del tutto analogo a quello della \texttt{dct2( )} precedentemente descritta), è necessario applicare una trasformazione ulteriore. Infatti (citando dalla documentazione della FFTW3):
+\begin{quotation}
+the transforms computed by FFTW are unnormalized, exactly like the corresponding real and complex DFTs, so computing a transform followed by its inverse yields the original array scaled by $N$, where $N$ is the logical DFT size. For REDFT01, $N=2n$. 
+\end{quotation}
+
+Nel caso bidimensionale, il fattore di scala è $2n \cdot 2m = 4nm$, e va applicato dopo la denormalizzazione e il calcolo della IDCT2.
+
+\begin{minted}[frame=single]{c}
+void scala(int m, int n, double * array)
+{
+    double scale = 4.0 * m * n;
+
+    for(int i = 0; i < m; i++){
+        for(int j = 0; j < n; j++)
+            array[i*n + j] = array[i*n + j] / scale;
+    }
+}
+\end{minted}
+
+Senza questo passaggio, non è possibile confrontare direttamente la matrice \texttt{uint8\_t} di partenza e il risultato della IDCT2 (tralasciando in questo momento la questione taglio frequenze, che ovviamente va a modificare la matrice di partenza).
+
+\subsection*{Esportazione delle immagini}
+Per l'esportazione delle immagini tagliate utilizziamo ancora la CImg citata in precedenza. Il codice:
+\begin{minted}[frame=single]{c++}
+CImg<uint8_t> image2(img2, n, m, 1, 1);
+image2.save(strcat(argv[1], "cut.bmp"), -1, 3);;
+\end{minted}
+
+nella prima linea viene costruito un oggetto CImg (\texttt{image2}) a partire dalla matrice dei pixel risultato della IDCT2 (\texttt{img2}). Nella seconda linea l'oggetto viene salvato su file con suffisso "cut" nel nome.
+
+\section*{Risultati dei test}
+
 
 
 \end{document}
