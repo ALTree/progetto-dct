@@ -11,7 +11,7 @@ int main(int argc, char ** argv)
 {
     if(argc < 3){
         printf("Usa:\t %s nome_file numero_bins \n", argv[0]);
-        printf("Usa -h alla fine del comando per plottare l'istogramma \n");
+        printf("Usa -h alla fine del comando per non visualizzare il grafico \n");
         return 1;
     }
 
@@ -44,7 +44,7 @@ int main(int argc, char ** argv)
     printf("Preparo istogramma\n");
     hist(m, n, bins, dct, "hist.txt");
 
-    if(argc==4){
+    if(argc!=4){
         system("python graph.py hist.txt pre-taglio");
     }
 
@@ -60,7 +60,7 @@ int main(int argc, char ** argv)
     printf("Preparo istogramma\n");
     hist(m, n, bins, dct, "hist2.txt");
 
-    if(argc==4){
+    if(argc!=4){
         system("python graph.py hist2.txt post-taglio");
     }
     
