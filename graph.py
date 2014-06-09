@@ -3,6 +3,7 @@
 from __future__ import print_function
 import numpy as np
 import pylab as P
+import sys
 
 def main(nome, frase):
 	# valori dei parametri
@@ -40,7 +41,7 @@ def main(nome, frase):
 	tit = 'Istogramma delle frequenze della DCT con ' + str(parametri['bins']) + ' bins -' + frase
 	P.suptitle(tit)
 
-if __name__ == '__main__':
-	main("hist.txt", " pre taglio")
-	main("hist2.txt", " post taglio")
 	P.show()
+
+if __name__ == '__main__':
+	main(sys.argv[1], sys.argv[2])
