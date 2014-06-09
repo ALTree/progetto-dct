@@ -37,7 +37,7 @@ int main(int argc, char ** argv)
     int n = image.width();
     
     // calcola DCT2
-    printf("Calcolo DCT\n");
+    printf("Calcolo DCT2\n");
     double * dct = dct2(m, n, img);
 
     // esporta istogramma
@@ -65,7 +65,7 @@ int main(int argc, char ** argv)
     }
     
     // calcola IDCT2
-    printf("Calcolo IDCT\n");
+    printf("Calcolo IDCT2\n");
     uint8_t * img2 = idct2(m, n, dct);
 
     // salva img2 su file

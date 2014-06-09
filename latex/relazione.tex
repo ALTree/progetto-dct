@@ -16,7 +16,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-Descriviamo l'implementazione di una serie di test riguardanti l'applicazione di una trasformata DCT ad immagini bitmap \textit{grayscale}, il taglio di alcune delle frequenze della trasformata, l'applicazione della IDCT alla matrice risultante, e il confronto con l'originale dell'immagine BMP ottenuta dopo il taglio.
+Descriviamo l'implementazione di una serie di test riguardanti l'applicazione di una trasformata DCT2 ad immagini bitmap \textit{grayscale}, il taglio di alcune delle frequenze della trasformata, l'applicazione della IDCT2 alla matrice risultante, e il confronto con l'originale dell'immagine BMP ottenuta dopo il taglio.
 \end{abstract}
 
 \section*{Implementazione}
@@ -29,7 +29,7 @@ Le immagini campione fornite su \texttt{k.matapp.unimib.it} non sono memorizzate
 
 Una libreria di semplice utilizzo che abbiamo trovato è CImg\footnote{cimg.sourceforge.net}, scritta in C++. Non richiede installazione, e consiste in un unico \emph{header file} \texttt{CImg.h} che va semplicemente incluso nella \emph{directory} del progetto. L'utilizzo di una libreria C++ ci ha costretti a compilare il resto del nostro codice (C99 puro) come C++, ma le differenze tra i due linguaggi sono minimali e gli adattamenti che abbiamo dovuto fare sul codice già scritto sono stati di poco conto.
 
-Il codice utilizzato per la lettura dell'immagine è il seguente:
+Il codice (C++) utilizzato per la lettura dell'immagine è il seguente:
 
 \begin{minted}[frame=single]{c++}
 CImg<uint8_t> image(argv[1]);   // argv[1] contiene il nome del file
@@ -98,11 +98,34 @@ Per il calcolo degli istogrammi, una funzione \texttt{hist( )} accetta come para
 \begin{minted}[frame=single]{c}
 void hist(int m, int n, int bins, double * array, const char * name)
 {
-   // TODO
+    double max; // il valore massimo in array
+    /* calcola max */
+   
+    double bins_width = (max + 100.0) / bins;
+    int * hist = calloc(bins, sizeof(int));
+    for(int i = 0; i < m; i++){
+        for(int j = 0; j < n; j++)
+	        hist[ (int)abs(array[i*n + j] / bins_width) ]++;
+    }
+
+    // continua ...
+\end{minted}
+
+\texttt{hist( )} salva su poi su file il risultato della computazione:
+\begin{minted}[frame=single]{c}
+    // ... continua
+   
+    FILE * fileptr = fopen(name, "w");
+    fprintf(fileptr, "bins\t%d \n", bins);
+    fprintf(fileptr, "width\t%.3f \n", bins_width);
+    fprintf(fileptr, "max\t%.3f \n", max);
+    for(int i = 0; i < bins; i++)
+	fprintf(fileptr, "%d\n", hist[i]);
+
+    fclose(fileptr);
 }
 \end{minted}
 
-\texttt{hist( )} salva su file il risultato della computazione.
 
 \subsection*{Taglio delle frequenze}
 
@@ -132,7 +155,7 @@ Dopo la denormalizzazione e il calcolo della IDCT2 (di cui non riportiamo il cod
 the transforms computed by FFTW are unnormalized, exactly like the corresponding real and complex DFTs, so computing a transform followed by its inverse yields the original array scaled by $N$, where $N$ is the logical DFT size. For REDFT01, $N=2n$. 
 \end{quotation}
 
-Nel caso bidimensionale, il fattore di scala è $2n \cdot 2m = 4nm$, e va applicato dopo la denormalizzazione e il calcolo della IDCT2.
+Nel caso bidimensionale, il fattore di scala è $2n \cdot 2m = 4nm$, e va applicato dopo la denormalizzazione e  il calcolo della IDCT2.
 
 \begin{minted}[frame=single]{c}
 void scala(int m, int n, double * array)
@@ -149,13 +172,13 @@ void scala(int m, int n, double * array)
 Senza questo passaggio, non è possibile confrontare direttamente la matrice \texttt{uint8\_t} di partenza e il risultato della IDCT2 (tralasciando in questo momento la questione taglio frequenze, che ovviamente va a modificare la matrice di partenza).
 
 \subsection*{Esportazione delle immagini}
-Per l'esportazione delle immagini tagliate utilizziamo ancora la CImg citata in precedenza. Il codice:
+Per l'esportazione delle immagini tagliate utilizziamo ancora la CImg citata in precedenza. Il codice (C++):
 \begin{minted}[frame=single]{c++}
 CImg<uint8_t> image2(img2, n, m, 1, 1);
 image2.save(strcat(argv[1], "cut.bmp"), -1, 3);;
 \end{minted}
 
-nella prima riga viene costruito un oggetto CImg (\texttt{image2}) a partire dalla matrice dei pixel risultato della IDCT2 (\texttt{img2}). Nella seconda riga l'oggetto viene salvato su file con suffisso "cut" nel nome.
+Nella prima riga viene costruito un oggetto CImg (\texttt{image2}) a partire dalla matrice dei pixel risultato della IDCT2 (\texttt{img2}). Nella seconda riga l'oggetto viene salvato su file con suffisso "cut" nel nome.
 
 \section*{Risultati dei test}
 
