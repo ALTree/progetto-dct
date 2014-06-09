@@ -10,7 +10,7 @@ using namespace cimg_library;
 int main(int argc, char ** argv)
 {
     if(argc < 3){
-        printf("Usa:\t %s nome_file numero_bins taglio \n", argv[0]);
+        printf("Usa:\t %s nome_file numero_bins \n", argv[0]);
         printf("Usa -h alla fine del comando per plottare l'istogramma \n");
         return 1;
     }
