@@ -25,6 +25,8 @@ uint8_t * to_uint8_t(int m, int n, double * array)
         for(int j = 0; j < n; j++){
             if(array[i*n + j] > 255){
                 out[i*n + j] = 255;
+            } else if(array[i*n + j] < 0){
+                out[i*n + j] = 0;
             } else {
                 out[i*n + j] = (uint8_t)array[i*n + j];
             }
