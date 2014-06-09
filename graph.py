@@ -24,23 +24,20 @@ def main(nome, frase):
 			hist = np.append(hist, int(row[:-1]))
 
 	base = np.arange(0, parametri['max'], parametri['width'])
+	step = parametri['max'] / 10
+	xticks = np.arange(0, parametri['max'], step)
 
 	width = parametri['width']
 
-	#
-	# comparazione tempi iterativa simmetrica
-	#
 	P.figure()
-
 
 	P.bar(base, hist, width=width, color='b', label='simmetriche', log=True)
 
-
-	#P.xticks(base, tuple(base))
+	P.xticks(xticks, tuple(xticks.astype('int32')), rotation=45)
 	P.xlabel('Frequenze')
-	tit = 'Istogramma delle frequenze della DCT con ' + str(parametri['bins']) + ' bins -' + frase
-	P.suptitle(tit)
-
+	tit = 'Istogramma delle frequenze della DCT ' + frase + '\n visualizzati: ' + str(int(parametri['bins'])) + ' bins - dimensione bin: ' +  str(int(parametri['width']))
+	P.title(tit, fontweight='bold', fontsize=14)
+	P.tight_layout(rect = [0.03, 0, 0.97, 1])
 	P.show()
 
 if __name__ == '__main__':
