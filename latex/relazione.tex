@@ -182,7 +182,7 @@ Nella prima riga viene costruito un oggetto CImg (\texttt{image2}) a partire dal
 
 \section*{Risultati dei test}
 
-Un esempio di test, usando l'immagine \texttt{flower\_foveon}, presa dall'insieme di test. Si tratta di un file BMP $2268 \times 1512$, codificato usando il livello di compressione 1 (RLE a 8 bit).
+Un esempio di test, usando l'immagine \texttt{flower\_foveon}, presa dall'insieme di test. Si tratta di un file BMP $2268 \times 1512$, codificato usando il livello di compressione 1 (RLE a 8 bit). La frequenza di taglio è 30 per la prima immagine (con il paragone di un dettaglio del fiore) e di 100 per il confronto sull'immagine completa.
 
 \begin{figure}[!ht]
 \centering
@@ -193,20 +193,35 @@ Un esempio di test, usando l'immagine \texttt{flower\_foveon}, presa dall'insiem
 \begin{figure}[!ht]
 \centering
 \includegraphics[scale=0.026]{images/cfr} 
-\caption{\texttt{flower\_feveon.bmp}, originale vs taglio frequenze $< 30$}
+\caption{\texttt{flower\_feveon.bmp}, particolare. Originale vs taglio frequenze $< 30$}
 \end{figure}
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[scale=0.29]{images/flower_foveon.pdf} 
-\caption{\texttt{flower\_feveon.bmp}, originale originale}
+\includegraphics[scale=0.29]{images/flower_foveon} 
+\caption{\texttt{flower\_feveon.bmp}, originale}
 \end{figure}
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[scale=0.026]{images/flower_foveon_cut.pdf} 
+\includegraphics[scale=0.026]{images/flower_foveon_cut} 
 \caption{\texttt{flower\_feveon.bmp}, taglio frequenze $< 100$}
 \end{figure}
+
+Un altro esempio, tagliando stavolta tutte le frequenze in valore assoluto minori di 5000 sull'immagine \texttt{big\_building}:
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[scale=0.29]{images/big_building} 
+\caption{\texttt{big\_building}, originale}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[scale=0.026]{{{images/big_building.bmpcut}}}
+\caption{\texttt{big\_building}, taglio frequenze $< 5000$}
+\end{figure}
+
 
 \end{document}
 
