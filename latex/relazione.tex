@@ -11,21 +11,21 @@
 
 \author{L. De Sano, A. Donizetti, M. Scotti}
 \title{La trasformata DCT applicata alle immagini}
-\date{Maggio 2014}
+\date{Giugno 2014}
 
 \begin{document}
 \maketitle
 \begin{abstract}
-Descriviamo l'implementazione di una serie di test riguardanti l'applicazione di una trasformata DCT2 ad immagini bitmap \textit{grayscale}, il taglio di alcune delle frequenze della trasformata, l'applicazione della IDCT2 alla matrice risultante, e il confronto con l'originale dell'immagine BMP ottenuta dopo il taglio.
+Descriviamo l'implementazione di una serie di test riguardanti l'applicazione della trasformata DCT2 ad immagini bitmap \textit{grayscale}, il taglio di alcune delle frequenze della trasformata, l'applicazione della IDCT2 alla matrice risultante, e il confronto con l'originale dell'immagine bitmap ottenuta dopo il taglio.
 \end{abstract}
 
 \section*{Implementazione}
 
-In questa sezione diamo una descrizione dell'implementazione dei test richiesti dalla consegna. Le parti di lettura file BMP, calcolo DCT2 e IDCT2, taglio delle frequenze, e ri-esportazione dell'immagine sono scritte in C (compilato come C++ per via della dipendenza da una libreria per la manipolazione di immagini da noi utilizzata, scritta in C++). Il codice che disegna e stampa a schermo l'istogramma delle frequenze è scritto in Python.
+In questa sezione diamo una descrizione dell'implementazione dei test richiesti dalla consegna. Le parti di lettura file BMP, calcolo DCT2 e IDCT2, taglio delle frequenze, e ri-esportazione dell'immagine sono scritte in C99 (compilato come C++ per via della dipendenza da una libreria per la manipolazione di immagini da noi utilizzata, scritta in C++). Il codice che disegna e stampa a schermo l'istogramma delle frequenze è scritto in Python.
 
 \subsection*{Lettura delle immagini}
 
-Le immagini campione fornite su \texttt{k.matapp.unimib.it} non sono memorizzate come BMP pure e senza compressione (ovvero: il file non contiene semplicemente una matrice con i valori in \emph{greyscale} dei pixel), ma sono compresse usando una \emph{run-length encoding} a 8 bits. Per questo motivo, abbiamo scartato l'idea di scrivere "a mano" un lettore di files BMP, e deciso di utilizzare una libreria esterna (possibilmente il più leggera possibile) per l'importazione delle immagini.
+Le immagini campione fornite su \texttt{k.matapp.unimib.it} non sono memorizzate come BMP pure e senza compressione (ovvero: il file non contiene semplicemente una matrice con i valori in \emph{greyscale} dei pixel), ma sono compresse usando una \emph{run-length encoding} a 8 bits. Per questo motivo abbiamo scartato l'idea di scrivere a mano un lettore di files BMP, e deciso di utilizzare una libreria esterna (possibilmente il più leggera possibile) per l'importazione delle immagini.
 
 Una libreria di semplice utilizzo che abbiamo trovato è CImg\footnote{cimg.sourceforge.net}, scritta in C++. Non richiede installazione, e consiste in un unico \emph{header file} \texttt{CImg.h} che va semplicemente incluso nella \emph{directory} del progetto. L'utilizzo di una libreria C++ ci ha costretti a compilare il resto del nostro codice (C99 puro) come C++, ma le differenze tra i due linguaggi sono minimali e gli adattamenti che abbiamo dovuto fare sul codice già scritto sono stati di poco conto.
 
@@ -44,7 +44,7 @@ Da notare che la matrice che contiene i pixel è di tipo \texttt{uint8\_t}, dato
 
 Scrivendo in C99, è banale chiamare direttamente FFTW3. La libreria è facile da installare e ben documentata. La chiamata avviene in due passaggi: prima di tutto si crea un piano (\emph{plan}) con le caratteristiche della FT che si vuole operare sui dati, successivamente lo si esegue.
 
-Le funzione da usarsi per la creazione di un \emph{plan} di DCT bidimensionale da $\mathbb{R}$ ad $\mathbb{R}$ è \texttt{fftw\_plan\_r2r\_2d( )}. Alla funzione, oltre che i parametri con i dati da trasformare, vanno passate due flag (una per ognuna delle due dimensioni) che specificano quale tipo di trasformata applicare. Nel nostro caso, per entrambe, si tratta di \texttt{FFTW\_REDFT10}:
+Le funzione FFTW3 da utilizzare per la creazione di un \emph{plan} DCT2 da $\mathbb{R}^2$ ad $\mathbb{R}^2$ è \texttt{fftw\_plan\_r2r\_2d( )}. Alla funzione, oltre che i parametri con i dati da trasformare, vanno passate due flag (una per ognuna delle due dimensioni) che specificano quale tipo di trasformata applicare. Nel nostro caso, per entrambe, si tratta di \texttt{FFTW\_REDFT10}:
 
 FFTW\_REDFT10 (DCT-II, 'the' DCT):
 \begin{quotation}
@@ -69,7 +69,7 @@ double * dct2(int m, int n, uint8_t * array)
 }
 \end{minted}
 
-La funzione \texttt{dct2} prende un array di \texttt{uint8\_t} e restituisce un array di \texttt{double} contenente la DCT2 dell'input, normalizzata come richiesto dalla consegna per riflettere i risultati della funzione \texttt{dct2} di Matlab.
+La funzione \texttt{dct2} prende un array di \texttt{uint8\_t} e restituisce un array di \texttt{double} contenente la DCT2 dell'input normalizzata, come richiesto, per replicare i risultati della funzione \texttt{dct2} di Matlab.
 
 La funzione di normalizzazione è implementata come indicato nella consegna:
 
@@ -178,11 +178,11 @@ CImg<uint8_t> image2(img2, n, m, 1, 1);
 image2.save(strcat(argv[1], "cut.bmp"), -1, 3);;
 \end{minted}
 
-Nella prima riga viene costruito un oggetto CImg (\texttt{image2}) a partire dalla matrice dei pixel risultato della IDCT2 (\texttt{img2}). Nella seconda riga l'oggetto viene salvato su file con suffisso "cut" nel nome.
+Nella prima riga viene costruito un oggetto CImg (\texttt{image2}) a partire dalla matrice dei pixel risultato della IDCT2 (\texttt{img2}). Nella seconda riga l'oggetto viene salvato su file con suffisso ``cut'' nel nome.
 
 \section*{Risultati dei test}
 
-Un esempio di test, usando l'immagine \texttt{flower\_foveon}, presa dall'insieme di test. Si tratta di un file BMP $2268 \times 1512$, codificato usando il livello di compressione 1 (RLE a 8 bit). La frequenza di taglio è 30 per la prima immagine (con il paragone di un dettaglio del fiore) e di 100 per il confronto sull'immagine completa.
+Diamo un esempio di esecuzione del codice, usando l'immagine \texttt{flower\_foveon}, presa dall'insieme di test. Si tratta di un file BMP $2268 \times 1512$, codificato usando il livello di compressione 1 (RLE a 8 bit). La frequenza di taglio è 30 per la prima immagine (con il paragone di un dettaglio del fiore) e di 100 per il confronto sull'immagine completa.
 
 \begin{figure}[!ht]
 \centering
@@ -222,7 +222,9 @@ Un altro esempio, tagliando stavolta tutte le frequenze in valore assoluto minor
 \caption{\texttt{big\_building}, taglio frequenze $< 5000$}
 \end{figure}
 
+\clearpage
 
+Una cosa interessante da far notare è che il passaggio del taglio delle frequenze della trasformata è decisamente meno performante della procedura specificata dallo standard JPEG sul fronte della compressione della dimensione dell'immagine. Ad esempio, per \texttt{flower\_feveon.bmp}, un taglio delle frequenze al di sotto del valore 30 (che comporta un peggioramento della qualità dell'immagine ben visibile ad occhio nudo, anche in assenza di zoom) comprime l'immagine originale di un modesto 34\% (4.1 MB vs 2.7 MB).
 \end{document}
 
 
