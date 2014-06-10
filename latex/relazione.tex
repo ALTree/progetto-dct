@@ -224,6 +224,24 @@ Un altro esempio, tagliando stavolta tutte le frequenze in valore assoluto minor
 
 \clearpage
 
+Un altro test, su \texttt{artificial} (immagine artificiale), con taglio frequenze minore di 100:
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[scale=0.12]{images/artificial} 
+\caption{\texttt{artificial}, originale}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[scale=0.20]{images/artificialcut}
+\caption{\texttt{artificial}, taglio frequenze $< 100$}
+\end{figure}
+
+\clearpage
+
+Non sembra esserci particolare differenza nel degrado della qualità tra immagini naturali e immagini artificiali. Del resto il problema del JPEG sulle immagini artificiali si presenta quando avvengono salti di colore tra settori $8 \times 8$ differenti; mentre in questo caso stiamo operando una trasformata sull'intera immagine (e non settoriale), e i cambi improvvisi di tonalità non influenzano l'immagine finale dopo il taglio.
+
 Una cosa interessante da far notare è che il passaggio del taglio delle frequenze della trasformata è decisamente meno performante della procedura specificata dallo standard JPEG sul fronte della compressione della dimensione dell'immagine. Ad esempio, per \texttt{flower\_feveon.bmp}, un taglio delle frequenze al di sotto del valore 30 (che comporta un peggioramento della qualità dell'immagine ben visibile ad occhio nudo, anche in assenza di zoom) comprime l'immagine originale di un modesto 34\% (4.1 MB vs 2.7 MB).
 \end{document}
 
