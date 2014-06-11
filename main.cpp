@@ -4,6 +4,7 @@
 #define cimg_display 0
 #include "CImg.h"
 #include "dct.h"
+#include "string.h"
 
 using namespace cimg_library;
 
@@ -12,11 +13,11 @@ int main(int argc, char ** argv)
     if(argc < 3){
         printf("Usa:\t %s nome_file numero_bins \n", argv[0]);
         printf("Usa -h alla fine del comando per non visualizzare il grafico \n");
+        printf("Usa -e alla fine del comando per esportare l'immagine in eps \n");
         return 1;
     }
 
     int bins = atoi(argv[2]);
-    //int cut = atoi(argv[3]);
 
     /*
     uint8_t in[] = {11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34};
@@ -44,8 +45,10 @@ int main(int argc, char ** argv)
     printf("Preparo istogramma\n");
     hist(m, n, bins, dct, "hist.txt");
 
-    if(argc!=4){
-        system("python graph.py hist.txt pre-taglio");
+    if(argc == 3){
+        system("python graph.py 1 hist.txt pre-taglio");
+    } else if(!strcmp(argv[3], "-e")) {
+        system("python graph.py 2 hist.txt pre-taglio");
     }
 
     int cut;
@@ -60,8 +63,10 @@ int main(int argc, char ** argv)
     printf("Preparo istogramma\n");
     hist(m, n, bins, dct, "hist2.txt");
 
-    if(argc!=4){
-        system("python graph.py hist2.txt post-taglio");
+    if(argc == 3){
+        system("python graph.py 1 hist2.txt post-taglio");
+    } else if(!strcmp(argv[3], "-e")) {
+        system("python graph.py 2 hist2.txt post-taglio");
     }
     
     // calcola IDCT2

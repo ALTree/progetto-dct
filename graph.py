@@ -5,7 +5,7 @@ import numpy as np
 import pylab as P
 import sys
 
-def main(nome, frase):
+def main(mode, nome, frase):
 	# valori dei parametri
 	parametri = {}
 
@@ -38,7 +38,12 @@ def main(nome, frase):
 	tit = 'Istogramma delle frequenze della DCT ' + frase + '\n visualizzati: ' + str(int(parametri['bins'])) + ' bins - dimensione bin: ' +  str(int(parametri['width']))
 	P.title(tit, fontweight='bold', fontsize=14)
 	P.tight_layout(rect = [0.03, 0, 0.97, 1])
-	P.show()
+	
+	if mode is '1':
+		P.show()
+	else:
+		fnome = frase + '.eps'
+		P.savefig(fnome)
 
 if __name__ == '__main__':
-	main(sys.argv[1], sys.argv[2])
+	main(sys.argv[1], sys.argv[2], sys.argv[3])
