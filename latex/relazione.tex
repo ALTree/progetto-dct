@@ -171,6 +171,26 @@ void scala(int m, int n, double * array)
 
 Senza questo passaggio, non è possibile confrontare direttamente la matrice \texttt{uint8\_t} di partenza e il risultato della IDCT2 (tralasciando in questo momento la questione taglio frequenze, che ovviamente va a modificare la matrice di partenza).
 
+L'ultimo passaggio prevede il cast dei valori \texttt{double} ritornati dalla IDCT2 in valori \texttt{uint8\_t} adatti alla costruzione di un'immagine bmp \emph{grayscale}.
+
+\begin{minted}[frame=single]{c}
+uint8_t * to_uint8_t(int m, int n, double * array)
+{
+    uint8_t * out = (uint8_t *) malloc(sizeof(double) * m * n);
+    for(int i = 0; i < m; i++){
+        for(int j = 0; j < n; j++){
+            if(array[i*n + j] > 255)
+                out[i*n + j] = 255;
+            else if(array[i*n + j] < 0)
+                out[i*n + j] = 0;
+            else 
+                out[i*n + j] = (uint8_t)array[i*n + j];
+        }
+    }
+    return out;
+}
+\end{minted}
+
 \subsection*{Esportazione delle immagini}
 Per l'esportazione delle immagini tagliate utilizziamo ancora la CImg citata in precedenza. Il codice (C++):
 \begin{minted}[frame=single]{c++}
@@ -180,13 +200,15 @@ image2.save(strcat(argv[1], "cut.bmp"), -1, 3);;
 
 Nella prima riga viene costruito un oggetto CImg (\texttt{image2}) a partire dalla matrice dei pixel risultato della IDCT2 (\texttt{img2}). Nella seconda riga l'oggetto viene salvato su file con suffisso ``cut'' nel nome.
 
+\newpage
+
 \section*{Risultati dei test}
 
-Diamo un esempio di esecuzione del codice, usando l'immagine \texttt{flower\_foveon}, presa dall'insieme di test. Si tratta di un file BMP $2268 \times 1512$, codificato usando il livello di compressione 1 (RLE a 8 bit). La frequenza di taglio è 30 per la prima immagine (con il paragone di un dettaglio del fiore) e di 100 per il confronto sull'immagine completa.
+%% Diamo un esempio di esecuzione del codice, usando l'immagine \texttt{flower\_foveon}, presa dall'insieme di test. Si tratta di un file BMP $2268 \times 1512$, codificato usando il livello di compressione 1 (RLE a 8 bit). La frequenza di taglio è 30 per la prima immagine (con il paragone di un dettaglio del fiore) e di 100 per il confronto sull'immagine completa.
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[scale=0.6]{images/hist_fiore_30_pre} 
+\includegraphics[scale=0.55]{images/hist_fiore_30_pre} 
 \caption{\texttt{flower\_feveon.bmp}, istogramma frequenze della trasformata}
 \end{figure}
 
@@ -208,21 +230,41 @@ Diamo un esempio di esecuzione del codice, usando l'immagine \texttt{flower\_fov
 \caption{\texttt{flower\_feveon.bmp}, taglio frequenze $< 100$}
 \end{figure}
 
+\clearpage
+
 Un altro esempio, tagliando stavolta tutte le frequenze in valore assoluto minori di 5000 sull'immagine \texttt{big\_building}:
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[scale=0.29]{images/big_building} 
+\includegraphics[scale=0.26]{images/big_building} 
 \caption{\texttt{big\_building}, originale}
 \end{figure}
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[scale=0.026]{{{images/big_building.bmpcut}}}
+\includegraphics[scale=0.024]{{{images/big_building.bmpcut}}}
 \caption{\texttt{big\_building}, taglio frequenze $< 5000$}
 \end{figure}
 
 \clearpage
+
+Un altro test, su \texttt{artificial} (immagine artificiale), con taglio frequenze minore di 100:
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[scale=0.12]{images/artificial} 
+\caption{\texttt{artificial}, originale}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[scale=0.20]{images/artificialcut}
+\caption{\texttt{artificial}, taglio frequenze $< 100$}
+\end{figure}
+
+\clearpage
+
+Non sembra esserci particolare differenza nel degrado della qualità tra immagini naturali e immagini artificiali. Del resto il problema del JPEG sulle immagini artificiali si presenta quando avvengono salti di colore tra settori $8 \times 8$ differenti; mentre in questo caso stiamo operando una trasformata sull'intera immagine (e non settoriale), e i cambi improvvisi di tonalità non influenzano l'immagine finale dopo il taglio.
 
 Una cosa interessante da far notare è che il passaggio del taglio delle frequenze della trasformata è decisamente meno performante della procedura specificata dallo standard JPEG sul fronte della compressione della dimensione dell'immagine. Ad esempio, per \texttt{flower\_feveon.bmp}, un taglio delle frequenze al di sotto del valore 30 (che comporta un peggioramento della qualità dell'immagine ben visibile ad occhio nudo, anche in assenza di zoom) comprime l'immagine originale di un modesto 34\% (4.1 MB vs 2.7 MB).
 \end{document}
