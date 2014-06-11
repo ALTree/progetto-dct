@@ -3,7 +3,7 @@
 from __future__ import print_function
 import numpy as np
 import pylab as P
-import sys
+import sys, os
 
 def main(mode, nome, frase):
 	# valori dei parametri
@@ -44,6 +44,7 @@ def main(mode, nome, frase):
 	else:
 		fnome = frase + '.eps'
 		P.savefig(fnome)
+                os._exit(0)
 
 if __name__ == '__main__':
 	main(sys.argv[1], sys.argv[2], sys.argv[3])
