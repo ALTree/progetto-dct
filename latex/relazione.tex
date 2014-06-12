@@ -208,13 +208,13 @@ Nella prima riga viene costruito un oggetto CImg (\texttt{image2}) a partire dal
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[scale=0.55]{images/hist_fiore_30_pre} 
+\includegraphics[scale=0.6]{images/hist_fiore_30_pre} 
 \caption{\texttt{flower\_feveon.bmp}, istogramma frequenze della trasformata}
 \end{figure}
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[scale=0.026]{images/cfr} 
+\includegraphics[scale=0.024]{images/cfr} 
 \caption{\texttt{flower\_feveon.bmp}, particolare. Originale vs taglio frequenze $< 30$}
 \end{figure}
 
@@ -266,7 +266,25 @@ Un altro test, su \texttt{artificial} (immagine artificiale), con taglio frequen
 
 Non sembra esserci particolare differenza nel degrado della qualità tra immagini naturali e immagini artificiali. Del resto il problema del JPEG sulle immagini artificiali si presenta quando avvengono salti di colore tra settori $8 \times 8$ differenti; mentre in questo caso stiamo operando una trasformata sull'intera immagine (e non settoriale), e i cambi improvvisi di tonalità non influenzano l'immagine finale dopo il taglio.
 
-Una cosa interessante da far notare è che il passaggio del taglio delle frequenze della trasformata è decisamente meno performante della procedura specificata dallo standard JPEG sul fronte della compressione della dimensione dell'immagine. Ad esempio, per \texttt{flower\_feveon.bmp}, un taglio delle frequenze al di sotto del valore 30 (che comporta un peggioramento della qualità dell'immagine ben visibile ad occhio nudo, anche in assenza di zoom) comprime l'immagine originale di un modesto 34\% (4.1 MB vs 2.7 MB).
+Cosa degna di nota è come come nel taglio dell'immagine artificiale (benché la ``sfumatura'' della figura sia identica) non compaiano alcuni artefatti (in particolare linee chiare) che sono invece presenti nelle immagini di benchmark pubblicate sul sito (ad esempio, in figura, in basso a sinistra).
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[scale=0.5]{images/cfrbenchmark}
+\caption{benchmark (sx) vs nostro risultato (dx), taglio frequenze $< 500$}
+\end{figure}
+
+Artefatti (quelli presenti nelle immagini di benchmark) che rappresentano tuttavia una evidente ``discontinuità'' nella sfumatura dell'immagine operata dal taglio delle frequenze della trasformata:
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[scale=0.6]{images/cfrbench1000}
+\caption{benchmark (sopra) vs originale (sotto), taglio frequenze $< 1000$}
+\end{figure}
+
+Motivo per cui non giudichiamo opportuno concludere che la differenza con le immagini di benchmark sia necessariamente indicativa di un errore nell'applicazione della trasformata e nel suo taglio (procedura che riteniamo essere state da noi implementate in maniera corretta), ma forse piuttosto di qualche differenza in fase di importazione / normalizzazione / esportazione delle immagini di benchmark.
+
+Un'ultima cosa interessante da notare è che il passaggio del taglio delle frequenze della trasformata è decisamente meno performante della procedura specificata dallo standard JPEG sul fronte della compressione della dimensione dell'immagine. Ad esempio, per \texttt{flower\_feveon.bmp}, un taglio delle frequenze al di sotto del valore 30 (che comporta un peggioramento della qualità dell'immagine ben visibile ad occhio nudo, anche in assenza di zoom) comprime l'immagine originale di un modesto 34\% (4.1 MB vs 2.7 MB).
 \end{document}
 
 
